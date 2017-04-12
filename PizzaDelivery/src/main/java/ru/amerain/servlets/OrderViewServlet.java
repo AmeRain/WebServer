@@ -6,6 +6,7 @@ package ru.amerain.servlets;
 
 
 import ru.amerain.jdbc.*;
+import ru.amerain.json.ParseJson;
 import ru.amerain.models.Order;
 
 
@@ -48,32 +49,9 @@ public class OrderViewServlet extends HttpServlet {
         JsonObjectBuilder rootBuilder = Json.createObjectBuilder();
 
 
-        for( Order order :orders){
-            JsonObjectBuilder orderBuilder = Json.createObjectBuilder();
-            JsonArrayBuilder arrayOfproduct = Json.createArrayBuilder();
-            JsonObjectBuilder productsBuilder = Json.createObjectBuilder();
-
-            for(int i =0;i<order.getProducts().length;i++) {
-                JsonObjectBuilder productBuilder = Json.createObjectBuilder();
-                JsonObject productJson = productBuilder.add("name_product",order.getProducts()[i])
-                        .add("count_of_product",order.getCountProducts()[i])
-                        .build();
-                arrayOfproduct.add(productJson);
-            }
-            //   JsonObject products = productsBuilder.add("Products",arrayOfproduct).build();
-            JsonObject orderJson = orderBuilder
-                    .add("fullname",order.getClient().getFull_name())
-                    .add("phone_number",order.getClient().getPhone_number())
-                    .add("adress",order.getAdress())
-                    .add("Products",arrayOfproduct)
-                    .build();
-            arrayOfOrder.add(orderJson);
-        }
-        JsonObject root = rootBuilder
-                .add("Orders",arrayOfOrder)
-                .build();
+        ParseJson parseJson = new ParseJson();
         response.setCharacterEncoding("UTF-8");
-        out.print(root.toString());//toString()
+        out.print(parseJson.parse(orders));//toString()
     }
 
 
