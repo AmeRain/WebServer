@@ -36,18 +36,11 @@ public class OrderViewServlet extends HttpServlet {
         List<Order> orders = database.getOrder();
 
 
-        //Json
-
         PrintWriter out;
         //   response.setContentType("application/json;charset=UTF-8");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         out = response.getWriter();
-//
-        //начинаем строить json tree
-        JsonArrayBuilder arrayOfOrder = Json.createArrayBuilder();
-        JsonObjectBuilder rootBuilder = Json.createObjectBuilder();
-
 
         ParseJson parseJson = new ParseJson();
         response.setCharacterEncoding("UTF-8");

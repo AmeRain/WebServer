@@ -30,7 +30,7 @@ public class ToClientTable {
 
             ResultSet Key = statement.getGeneratedKeys();
             Key.next();
-            return Key.getInt("id");
+            return Key.getInt(1);
         }
         else
             return getId(client);
@@ -45,7 +45,6 @@ public class ToClientTable {
                         ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
         statement.setString(1,client.getPhone_number());
         statement.setString(2,client.getFull_name());
-
         resultSet = statement.executeQuery();
        int i =0;
         while (resultSet.next())
@@ -61,7 +60,7 @@ public class ToClientTable {
 
         ResultSet rs = getClient(client);
         rs.next();
-        return rs.getInt(1);//next
+        return rs.getInt("id");//next
     }
 
     public  ResultSet getClient(int id) throws SQLException {

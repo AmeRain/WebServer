@@ -32,61 +32,78 @@ public abstract class AbstractWorkSQL implements WorkDatabase {
         }
     }
 
-    protected void createClient(Client client){
+
+    public void setOrder(Order order,Client client){
+        try {
+            createClient(client);
+            order.setClient(client);
+            createOrder(order);
+            createOrderedProducts(order);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Order> getOrder(){
+        List<Order> orders = new ArrayList<Order>();
+        try {
+            ToOrderTable orderTable = new ToOrderTable(connection);
+            ResultSet setOrders = orderTable.getAllOrders();
+
+            while (setOrders.next()){
+
+                String[] products = null;
+                String[] count = null;
+                Order order = new Order(getClient(setOrders.getInt("clients_id")),
+                        setOrders.getString("adress"),
+                        setOrders.getString("notes"),
+                        getProducts(setOrders.getInt("id"),products),
+                        getProductsCount(setOrders.getInt("id"),count)
+                );
+                orders.add(order);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
+    protected void createClient(Client client) throws SQLException{
         ToClientTable clientTable;
         int id;
-        try {
             clientTable = new ToClientTable(connection);
                  id = clientTable.add(client);
             client.setID(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
     }
 
-    protected void createOrder(Order order) {
+    protected void createOrder(Order order) throws SQLException {
         ToOrderTable orderTable;
         int id;
-        try {
             orderTable = new ToOrderTable(connection);
             id = orderTable.add(order);
             order.setID(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
 
     }
-    protected void createOrderedProducts(Order order) {
+    protected void createOrderedProducts(Order order) throws SQLException{
         ToOrderedProductsTable orderedProductsTable;
-        try {
             orderedProductsTable = new ToOrderedProductsTable(connection);
             orderedProductsTable.add(order);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
     }
 
-    public void setOrder(Order order,Client client){
-        createClient(client);
-        order.setClient(client);
-        createOrder(order);
-        createOrderedProducts(order);
-    }
 
-    protected Client getClient(int id){
+    protected Client getClient(int id) throws SQLException {
         ToClientTable clientTable;
         ResultSet setClient;
-        try {
+
             clientTable = new ToClientTable(connection);
             setClient = clientTable.getClient(id);
             setClient.next();
             return new Client(setClient.getInt("id"),
                     setClient.getString("full_name"),setClient.getString("phone_number"));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+
     }
 
     protected String[] getProducts(int id, String[] products) throws SQLException {
@@ -106,43 +123,20 @@ public abstract class AbstractWorkSQL implements WorkDatabase {
     }
     protected String[] getProductsCount(int id,String[] count)throws SQLException{
         ToOrderedProductsTable orderedProductsTable = new ToOrderedProductsTable(connection);
-        ResultSet rsdroduct = orderedProductsTable.getOrderedProducts(id);
+        ResultSet rsproduct = orderedProductsTable.getOrderedProducts(id);
         int size=0;
-        while (rsdroduct.next())
+        while (rsproduct.next())
             size++;
         count = new String[size];
         size =0;
-        rsdroduct.beforeFirst();
-        while (rsdroduct.next()){
-            count[size] = String.valueOf(rsdroduct.getInt("count"));
+        rsproduct.beforeFirst();
+        while (rsproduct.next()){
+            count[size] = String.valueOf(rsproduct.getInt("count"));
             size++;
         }
         return count;
     }
 
-     public List<Order> getOrder(){
-        List<Order> orders = new ArrayList<Order>();
-         try {
-             ToOrderTable orderTable = new ToOrderTable(connection);
-             ResultSet setOrders = orderTable.getAllOrders();
 
-             while (setOrders.next()){
-
-                 String[] products = null;
-                 String[] count = null;
-                 Order order = new Order(getClient(setOrders.getInt("clients_ID")),
-                         setOrders.getString("adress"),
-                         setOrders.getString("notes"),
-                         getProducts(setOrders.getInt("ID"),products),
-                         getProductsCount(setOrders.getInt("ID"),count)
-                                 );
-                 orders.add(order);
-             }
-         } catch (SQLException e) {
-             e.printStackTrace();
-         }
-
-         return orders;
-     }
 
 }

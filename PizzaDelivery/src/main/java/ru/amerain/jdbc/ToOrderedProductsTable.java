@@ -14,7 +14,7 @@ public class ToOrderedProductsTable {
     private Connection connection;
     private PreparedStatement statement;
 
-    public ToOrderedProductsTable(Connection connection) throws SQLException {
+    public ToOrderedProductsTable(Connection connection) {
         this.connection = connection;
     }
 

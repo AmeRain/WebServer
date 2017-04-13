@@ -11,7 +11,7 @@ public class ToOrderTable {
     private Connection connection;
     private PreparedStatement statement;
 
-    public ToOrderTable(Connection connection) throws SQLException {
+    public ToOrderTable(Connection connection){
         this.connection = connection;
     }
     public int add(Order order) throws SQLException {
@@ -27,7 +27,7 @@ public class ToOrderTable {
 
         ResultSet Key = statement.getGeneratedKeys();
         Key.next();
-        return Key.getInt(1);
+        return Key.getInt("id");
     }
     public ResultSet getAllOrders() throws SQLException {
         statement = connection.prepareStatement("SELECT * FROM orders");
@@ -37,7 +37,7 @@ public class ToOrderTable {
         statement = connection.prepareStatement("SELECT * FROM orders order by orders.id DESC LIMIT 1");
         ResultSet rs = statement.executeQuery();
         rs.next();
-        return rs.getInt(1);
+        return rs.getInt("id");
     }
 
 }
