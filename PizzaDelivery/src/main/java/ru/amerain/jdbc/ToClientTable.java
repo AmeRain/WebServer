@@ -12,7 +12,7 @@ public class ToClientTable {
     private PreparedStatement statement;
 
 
-    public ToClientTable(Connection connection) throws SQLException {
+    public ToClientTable(Connection connection) {
         this.connection = connection;
 
     }
@@ -22,7 +22,7 @@ public class ToClientTable {
                     ("INSERT INTO clients ( full_name, phone_number) VALUES (?,?)",
                             Statement.RETURN_GENERATED_KEYS);
 
-
+       //     connection.commit();
             statement.setString(1, client.getFull_name());
             statement.setString(2, client.getPhone_number());
 

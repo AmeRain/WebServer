@@ -25,6 +25,7 @@ public abstract class AbstractWorkSQL implements WorkDatabase {
 
            this.connection = DriverManager.getConnection(
                    settings.value("jdbc.url"), settings.value("jdbc.username"), settings.value("jdbc.password"));
+            connection.setAutoCommit(false);
         } catch (SQLException e) {
             e.printStackTrace();
         }catch (ClassNotFoundException e) {
@@ -40,6 +41,11 @@ public abstract class AbstractWorkSQL implements WorkDatabase {
             createOrder(order);
             createOrderedProducts(order);
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
             e.printStackTrace();
         }
     }
