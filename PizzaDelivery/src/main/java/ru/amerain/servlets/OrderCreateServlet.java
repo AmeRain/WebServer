@@ -25,13 +25,17 @@ public class OrderCreateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Client client = new Client
-                (request.getParameter("full_name"), request.getParameter("phone_number"));
-        Order order = new Order
-                (client, request.getParameter("client_place"), request.getParameter("date"),
-                        request.getParameterValues("product"), request.getParameterValues("count"));
-        WorkDatabaseBuilder workDatabaseBuilder = new WorkDatabaseBuilder();
-        WorkDatabase database = workDatabaseBuilder.getDatabase();
-        database.setOrder(order,client);
+        try {
+            Client client = new Client
+                    (request.getParameter("full_name"), request.getParameter("phone_number"));
+            Order order = new Order
+                    (client, request.getParameter("client_place"), request.getParameter("date"),
+                            request.getParameterValues("product"), request.getParameterValues("count"));
+            WorkDatabaseBuilder workDatabaseBuilder = new WorkDatabaseBuilder();
+            WorkDatabase database = workDatabaseBuilder.getDatabase();
+            database.setOrder(order, client);
+        } catch (NullPointerException e) {
+            System.out.print("НЕ введено значение");
+        }
     }
 }

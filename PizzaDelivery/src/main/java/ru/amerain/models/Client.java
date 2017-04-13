@@ -8,7 +8,7 @@ public class Client {
     private String full_name;
     private String phone_number;
     public Client(String full_name,String phone_number){
-
+        if(full_name==null || phone_number==null) throw new NullPointerException();
         this.full_name=full_name;
         this.phone_number=phone_number;
     }

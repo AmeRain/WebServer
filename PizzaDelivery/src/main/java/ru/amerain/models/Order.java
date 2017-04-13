@@ -28,6 +28,7 @@ public class Order {
         //list
     }
     public Order(Client client, String client_place , String date , String[] products, String[] countProducts){
+        if (client_place==null||date==null||products==null||countProducts==null) throw new NullPointerException();
         this.products = products;
         this.countProducts = countProducts;
         this.client = client;//user
