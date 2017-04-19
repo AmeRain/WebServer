@@ -1,33 +1,28 @@
-package ru.amerain.jdbc;
+package ru.amerain.mpkpizza.data.jdbc;
 
-import ru.amerain.models.Client;
+import ru.amerain.mpkpizza.domain.model.Client;
 
 import java.sql.*;
 
-/**
- * Created by User on 05.04.2017.
- */
-public class ToClientTable {
+public class ClientGateway {
     private Connection connection;
     private PreparedStatement statement;
 
 
-    public ToClientTable(Connection connection) {
+    public ClientGateway(Connection connection) {
         this.connection = connection;
 
     }
-    public int add(Client client) throws SQLException {
-        if(getClient(client)==null) {
+    public int insert(Client client) throws SQLException {
+        if(getById(client)==null) {
             statement = connection.prepareStatement
                     ("INSERT INTO clients ( full_name, phone_number) VALUES (?,?)",
                             Statement.RETURN_GENERATED_KEYS);
 
-       //     connection.commit();
             statement.setString(1, client.getFull_name());
             statement.setString(2, client.getPhone_number());
 
             statement.execute();
-
             ResultSet Key = statement.getGeneratedKeys();
             Key.next();
             return Key.getInt(1);
@@ -37,7 +32,7 @@ public class ToClientTable {
 
     }
 
-    public ResultSet getClient(Client client) throws SQLException {
+    public ResultSet getById(Client client) throws SQLException {
 
         ResultSet resultSet;
         statement = connection.prepareStatement
@@ -57,15 +52,20 @@ public class ToClientTable {
     }
 
     private int getId(Client client) throws SQLException {
-
-        ResultSet rs = getClient(client);
+        ResultSet rs = getById(client);
         rs.next();
         return rs.getInt("id");//next
     }
 
-    public  ResultSet getClient(int id) throws SQLException {
+    public Client getById(int id) throws SQLException {
         statement = connection.prepareStatement("SELECT * FROM clients WHERE clients.id=?");
         statement.setInt(1,id);
-       return statement.executeQuery();
+        ResultSet rs = statement.executeQuery();
+        Client client = new Client();
+         rs.next();
+            client.setFull_name(rs.getString("full_name"));
+            client.setPhone_number(rs.getString("phone_number"));
+
+        return client;
     }
 }
