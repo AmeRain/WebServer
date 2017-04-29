@@ -2,8 +2,8 @@ package ru.amerain.mpkpizza.servlets;
 
 
 import ru.amerain.mpkpizza.data.DataManager;
-import ru.amerain.mpkpizza.data.jdbc.DataFabric;
-import ru.amerain.mpkpizza.data.jdbc.DatabaseFabric;
+import ru.amerain.mpkpizza.data.jdbc.DataSourceFabric;
+import ru.amerain.mpkpizza.data.jdbc.DbDataSourceFabric;
 import ru.amerain.mpkpizza.domain.model.Client;
 import ru.amerain.mpkpizza.domain.model.Order;
 import ru.amerain.mpkpizza.domain.model.Product;
@@ -50,8 +50,8 @@ public class OrderCreateServlet extends HttpServlet {
 
 
             //в зависимости от чего будет меняться класс после New и где это прописывать
-            DataFabric dataFabric = new DatabaseFabric();
-            DataManager data = dataFabric.getData();
+            DataSourceFabric dataSourceFabric = new DbDataSourceFabric();
+            DataManager data = dataSourceFabric.createDataSource();
             data.setOrder(order, client, products);
 
         } catch (NullPointerException e) {

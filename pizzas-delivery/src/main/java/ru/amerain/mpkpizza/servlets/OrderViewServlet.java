@@ -1,9 +1,11 @@
 package ru.amerain.mpkpizza.servlets;
 
 
-import ru.amerain.mpkpizza.data.jdbc.DataFabric;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.amerain.mpkpizza.data.jdbc.DataSourceFabric;
 import ru.amerain.mpkpizza.data.DataManager;
-import ru.amerain.mpkpizza.data.jdbc.DatabaseFabric;
+import ru.amerain.mpkpizza.data.jdbc.DbDataSourceFabric;
 import ru.amerain.mpkpizza.view.json.JsonParser;
 import ru.amerain.mpkpizza.domain.model.Order;
 
@@ -20,13 +22,20 @@ import java.util.List;
 
 //http запрос имеет 4 основных метода передачи данных
 @WebServlet("/view/order")
+@Component
 public class OrderViewServlet extends HttpServlet {
+
+    private DataManager dataManager;
+
+    @Autowired
+    public OrderViewServlet(DataSourceFabric dataSource) {
+        DataSourceFabric dataSourceFabric = dataSource;
+        dataManager = dataSourceFabric.createDataSource();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        DataFabric dataFabric = new DatabaseFabric();//меняет только эта строчка в зависимости от выбора источника данных
-        DataManager data = dataFabric.getData();
-        List<Order> orders = data.getOrder();
+        List<Order> orders = dataManager.getOrder();
 
         PrintWriter out;
 

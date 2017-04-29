@@ -19,7 +19,7 @@ public class ProductGateway {
         this.connection = connection;
     }
 
-    public void add(Product product,int id) throws SQLException {
+    public void insert(Product product, int id) throws SQLException {
         statement = connection.prepareStatement
                 ("INSERT INTO ordered_products (id_order, name_products, count) VALUES (?,?,?)");
 
