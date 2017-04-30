@@ -15,7 +15,7 @@ public class OrderGateway {
         this.connection = connection;
     }
 
-    public int add(Order order,int clientId) throws SQLException {
+    public int insert(Order order, int clientId) throws SQLException {
         statement = connection.prepareStatement
                 ("INSERT INTO orders (clients_id, adress, notes) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
 

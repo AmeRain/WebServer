@@ -13,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.String;
 
 
 public class JdbcDataManager implements DataManager {
@@ -41,8 +40,8 @@ public class JdbcDataManager implements DataManager {
     public void setOrder(Order order, Client client, List<Product> products) {
         try {
             connection.commit();
-            id = createClient(client);
-            id = createOrder(order);
+            createClient(client);
+            createOrder(order);
             createOrderedProducts(products);
             connection.commit();
         } catch (SQLException e) {
@@ -60,8 +59,8 @@ public class JdbcDataManager implements DataManager {
         try {
             OrderGateway orderTable = new OrderGateway(connection);
             ResultSet OrdersSet = orderTable.getAllOrders();
-            while (OrdersSet.next()) {
 
+            while (OrdersSet.next()) {
                 Order order = new Order();
                 order.setClient(getClient(OrdersSet.getInt("clients_id")));
                 order.setAdress(OrdersSet.getString("adress"));
@@ -76,16 +75,16 @@ public class JdbcDataManager implements DataManager {
         return orders;
     }
 
-    public int createClient(Client client) throws SQLException {
+    public void createClient(Client client) throws SQLException {
         ClientGateway clientTable;
         clientTable = new ClientGateway(connection);
-        return clientTable.insert(client);
+        id =  clientTable.insert(client);
     }
 
-    public int createOrder(Order order) throws SQLException {
+    public void createOrder(Order order) throws SQLException {
         OrderGateway orderTable;
         orderTable = new OrderGateway(connection);
-        return orderTable.add(order, id);
+        id = orderTable.insert(order, id);
     }
 
     public void createOrderedProducts(List<Product> products) throws SQLException {
@@ -93,7 +92,7 @@ public class JdbcDataManager implements DataManager {
         orderedProductsTable = new ProductGateway(connection);
 
         for (Product product : products)
-            orderedProductsTable.add(product, id);
+            orderedProductsTable.insert(product, id);
     }
 
 
@@ -101,7 +100,7 @@ public class JdbcDataManager implements DataManager {
         ClientGateway clientTable;
 
         clientTable = new ClientGateway(connection);
-        return clientTable.getById(id);
+        return clientTable.findClientById(id);
     }
 
     public List<Product> getProducts(int id) throws SQLException {

@@ -14,7 +14,7 @@ import java.util.List;
 public class JsonParser {
 
     public JsonObject parse(List<Order> orders){
-        //начинаем строить json tree
+
         JsonArrayBuilder arrayOfOrder = Json.createArrayBuilder();
         JsonObjectBuilder rootBuilder = Json.createObjectBuilder();
 
@@ -22,7 +22,6 @@ public class JsonParser {
         for( Order order :orders){
             JsonObjectBuilder orderBuilder = Json.createObjectBuilder();
             JsonArrayBuilder arrayOfproduct = Json.createArrayBuilder();
-            JsonObjectBuilder productsBuilder = Json.createObjectBuilder();
 
             for(int i =0;i<order.getProducts().size();i++) {
                 JsonObjectBuilder productBuilder = Json.createObjectBuilder();
@@ -31,10 +30,9 @@ public class JsonParser {
                         .build();
                 arrayOfproduct.add(productJson);
             }
-            //   JsonObject products = productsBuilder.insert("Products",arrayOfproduct).build();
             JsonObject orderJson = orderBuilder
-                    .add("fullname",order.getClient().getFull_name())
-                    .add("phone_number",order.getClient().getPhone_number())
+                    .add("fullname",order.getClient().getFullName())
+                    .add("phone_number",order.getClient().getPhoneNumber())
                     .add("adress",order.getAdress())
                     .add("Products",arrayOfproduct)
                     .build();

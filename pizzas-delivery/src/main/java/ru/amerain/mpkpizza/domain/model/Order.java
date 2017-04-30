@@ -6,13 +6,13 @@ import java.util.List;
 public class Order {
     //    private int id;
     private Client client;
-    private String client_place;
+    private String clientPlace;
     private String date;
     private String notes;
     private List<Product> products;
 
-    public void setClient_place(String client_place) {
-        this.client_place = client_place;
+    public void setClientPlace(String clientPlace) {
+        this.clientPlace = clientPlace;
     }
 
     public void setProducts(List<Product> products) {
@@ -33,11 +33,11 @@ public class Order {
     }
 
     public void setAdress(String client_place) {
-        this.client_place = client_place;
+        this.clientPlace = client_place;
     }
 
     public String getAdress() {
-        return this.client_place;
+        return this.clientPlace;
     }
 
     public String getDate() {

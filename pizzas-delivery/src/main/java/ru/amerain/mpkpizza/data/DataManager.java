@@ -10,13 +10,17 @@ import java.util.List;
 
 public interface DataManager {
 
-    int createClient(Client client) throws SQLException;
+    void createClient(Client client) throws SQLException;
 
-    int createOrder(Order order) throws SQLException;
+    void createOrder(Order order) throws SQLException;
 
     void createOrderedProducts(List<Product> product) throws SQLException;
 
     void setOrder(Order order, Client client, List<Product> products);
 
     List<Order> getOrder();
+
+    Client getClient(int id) throws SQLException;
+
+    List<Product> getProducts(int id) throws SQLException;
 }
